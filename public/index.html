@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html>
 
+<html>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -146,6 +146,10 @@
       过滤条件(空表示匹配所有请求，否则只存储匹配的请求):
       <textarea id="filterText" maxlength="3072" placeholder="请输入过滤条件，具体规则见下面的说明"></textarea>
     </label>
+    <label class="form-control">
+      数据筛选（保存想要的数据，默认全部）
+      <textarea id="filterData" rows="10" placeholder="请输入内容过滤函数内容，这个内容由一个函数包裹着，默认传递一个session"></textarea>
+    </label>
     <div class="desc">
       <strong>说明: </strong>支持通过字符串、正则的方式匹配请求的URL，
       且支持通过 <strong>!xxx</strong> 的方式取非，可以同时设置多个过滤条件，
@@ -197,6 +201,9 @@
         if (data.filterText) {
           $('#filterText').val(data.filterText);
         }
+        if (data.filterData) {
+          $('#filterData').val(data.filterData)
+        }
 
         var pendingActive;
         var activeBox = $('#active').on('change', ({ target }) => {
@@ -222,7 +229,7 @@
         });
       });
       var btn = $('#update');
-      $('#sessionsDir,#filterText').on('input', function(){
+      $('#sessionsDir,#filterText,#filterData').on('input', function(){
          btn[0].disabled = false;
       });
       btn.click(function() {
@@ -232,7 +239,8 @@
           dataType: 'json',
           data: {
             sessionsDir: $('#sessionsDir').val().trim(),
-            filterText: $('#filterText').val().trim()
+            filterText: $('#filterText').val().trim(),
+            filterData: $('#filterData').val().trim()
           },
           success: function(data) {
             if (data.ec) {
